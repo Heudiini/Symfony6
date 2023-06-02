@@ -13,9 +13,12 @@ class HelloController extends AbstractController
    #[Route('/{limit?3}', name: 'app_index')]
   public function index(int $limit): Response
 {
+  // instead of returning new instance of the response class,we can use helper method called render, that can use twig templating engine,
     return $this->render(
         'hello/index.html.twig',
         [
+            // this variable "message" is going to be passed inside {{}} in the twig file
+     
             'message' => implode(',', array_slice($this->messages, 0, $limit))
         ]
     );
@@ -28,6 +31,8 @@ class HelloController extends AbstractController
         // takes two arguments inside '', : name of the template file, path
       'hello/show_one.html.twig',
       [
+
+        // this variable "message" is also going to be passed inside {{}} in the twig file
         'message' => $this->messages[$id]
       ]
     );
