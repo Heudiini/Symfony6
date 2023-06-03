@@ -11,7 +11,8 @@
 
 <div>The current message is:</div>
 <div>
-  <b>{{ messages }}</b>
+<div>{{message.message}}</div>
+   {{ include('hello/_message.html.twig', {message: message}) }}
 </div>
 
 
