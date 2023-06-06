@@ -16,20 +16,15 @@ class MicroPostController extends AbstractController
     {
         // Get all MicroPosts
         $allPosts = $posts->findAll();
-        dd($allPosts);
-
+        
         return $this->render('micro_post/index.html.twig', [
             'posts' => $allPosts,
         ]);
     }
 
-    #[Route('/micro-post/{id}', name: 'app_micro_post_show')]
-    public function showOne($id, MicroPostRepository $posts): Response
+    #[Route('/micro-post/{post}', name: 'app_micro_post_show')]
+    public function showOne(MicroPost $post): Response
     {
-        // Get a specific MicroPost by ID
-        $post = $posts->find($id);
-        dd($post);
-
         return $this->render('micro_post/show.html.twig', [
             'post' => $post,
         ]);
