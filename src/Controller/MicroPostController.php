@@ -13,23 +13,32 @@ class MicroPostController extends AbstractController
 {
     #[Route('/micro-post', name: 'app_micro_post')]
     public function index(MicroPostRepository $posts, EntityManagerInterface $entityManager): Response
-    {/* 
-        $microPost = new MicroPost();
+    {
+        // Uncomment the code below if you want to remove a MicroPost by ID
+        /*
+        $microPost = $posts->find(5);
+        if ($microPost) {
+            $entityManager->remove($microPost);
+            $entityManager->flush();
+        }
+        */
 
-        $microPost->setTitle('From controller');
-        $microPost->setText('Moi');
-        $microPost->setCreated(new DateTime());
+        // Get all MicroPosts
+        $allPosts = $posts->findAll();
+        dd($allPosts);
 
-*/
-        $microPost = $posts->find(5); 
-       //$microPost->setTitle('From id 3');
-        $posts->remove($microPost, true); 
-        $entityManager->persist($microPost);
-        $entityManager->flush();
-        
-        //dd($posts->findBy(['title' => 'Welcome to Tenerife!']));
         return $this->render('micro_post/index.html.twig', [
             'controller_name' => 'MicroPostController',
         ]);
+    }
+
+    #[Route('/micro-post/{id}', name: 'app_micro_post_show')]
+    public function showOne($id, MicroPostRepository $posts): Response
+    {
+        // Get a specific MicroPost by ID
+        $post = $posts->find($id);
+        dd($post);
+
+        return new Response();
     }
 }
