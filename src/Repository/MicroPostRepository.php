@@ -21,7 +21,7 @@ class MicroPostRepository extends ServiceEntityRepository
         parent::__construct($registry, MicroPost::class);
     }
 
-    public function save(MicroPost $entity, bool $flush = false): void
+    public function add(MicroPost $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
