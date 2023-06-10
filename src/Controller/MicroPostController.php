@@ -50,7 +50,10 @@ public function add(Request $request, MicroPostRepository $posts): Response
         $post->setCreated(new DateTime());
         $posts->add($post, true);
 
-        //add
+        //add a flash
+        $this->addFlash('success','Your micro post was added');
+        return $this->redirectToRoute('app_micro_post');
+
         //redirect
     }
 
