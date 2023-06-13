@@ -82,6 +82,9 @@ public function edit(MicroPost $post, Request $request, MicroPostRepository $pos
 
         //add a flash
         $this->addFlash('success','Your micro post was updated');
+
+
+            // Redirect to the micro post index page
         return $this->redirectToRoute('app_micro_post');
 
         //redirect
