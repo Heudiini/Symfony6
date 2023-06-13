@@ -3,5 +3,20 @@
 {% block title %}Create New Post{% endblock %}
 
 {% block body %}
-{{form(form)}}
+{{form_start(form)}}
+<div>{{form_errors(form)}}</div>
+
+
+<div>{{form_label(form.title,"Enter the title of your post")}}</div>
+{# if using utility classes e.g bootstrap or tailwind this attr functionality is hande. remember syntax #}
+<div>{{form_widget(form.title,{'attr':{'style':'color:gray'}})}}</div>
+<div>{{form_label(form.text,"Enter your post text")}}</div>
+<div>{{form_widget(form.text)}}</div>
+
+<div>{{form_errors(form)}}</div>
+
+<div>
+
+{# <button type"submit"></button>Save!!</div> #}
+{{form_end(form)}}
 {% endblock %}
