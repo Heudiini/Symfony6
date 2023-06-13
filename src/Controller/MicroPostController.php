@@ -64,5 +64,35 @@ public function add(Request $request, MicroPostRepository $posts): Response
         ]
     );
 }
+#[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
+public function edit(MicroPost $post, Request $request, MicroPostRepository $posts): Response
+{
+   
+    $form = $this->createFormBuilder($post)
+        ->add('title')
+        ->add('text')
+        ->add('submit', SubmitType::class, ['label' => 'Save'])
+        ->getForm();
+    $form->handleRequest($request);
 
+    if ($form->isSubmitted() && $form->isValid()) {
+        $post = $form->getData();
+      
+        $posts->add($post, true);
+
+        //add a flash
+        $this->addFlash('success','Your micro post was updated');
+        return $this->redirectToRoute('app_micro_post');
+
+        //redirect
+    }
+  // Render the add.html.twig template and pass the form and post as variables
+   
+    return $this->render(
+        'micro_post/add.html.twig',
+        [
+            'form' => $form->createView(),
+        ]
+    );
+}
 }
