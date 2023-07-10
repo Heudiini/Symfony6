@@ -1,6 +1,8 @@
 twig:
   default_path: "%kernel.project_dir%/templates"
   # form_themes: ["bootstrap_5_layout.html.twig"]
+  # we are using our own made template form here instead
+form_themes: -'form/fields.html.twig'
 
 when@test:
   twig:
