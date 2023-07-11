@@ -1,5 +1,6 @@
 <?php
-
+#https://symfony.com/doc/current/index.html
+#https://symfony.com/doc/current/validation.html#constraints
 namespace App\Entity;
 
 use App\Repository\MicroPostRepository;
@@ -17,12 +18,12 @@ class MicroPost
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 5, max: 255)]
+    #[Assert\Length(min: 5, max: 255, minMessage:'Your title is too short, 5 caracters is the minimum')]
     private $title;
 
     #[ORM\Column(type: 'string', length: 500)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 5, max: 500)]
+    #[Assert\Length(min: 5, max: 500,minMessage:'Your text is too short, 5 caracters is the minimum')]
     private $text;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
