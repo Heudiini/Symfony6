@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Entity\UserProfile;
+use App\Repository\UserProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use Doctrine\ORM\EntityManagerInterface;
 class HelloController extends AbstractController
 {
   private array $messages = [
@@ -13,15 +18,31 @@ class HelloController extends AbstractController
     ['message' => 'Hi', 'created' => '2023/03/12'],
     ['message' => 'Bye!', 'created' => '2021/05/12']
   ];
- #[Route('/{limit?3}', name: 'app_index', requirements: ['limit' => '\d+'])]
+ #[Route('/', name: 'app_index', requirements: ['limit' => '\d+'])]
 
-  public function index(int $limit): Response
+   public function index(EntityManagerInterface $entityManager): Response
+
   {
+
+    $user = new User();
+    $user -> setEmail('email3@email.com');
+    $user -> setPassword('4423456');
+
+    $profile = new UserProfile();
+    $profile-> setUser($user);
+     // Get the Doctrine entity manager and persist the User and UserProfile objects
+        $entityManager->persist($user);
+        $entityManager->persist($profile);
+
+        // Flush the changes to the database
+        $entityManager->flush();
+
+
     return $this->render(
       'hello/index.html.twig',
       [
         'messages' => $this->messages,
-        'limit' => $limit
+        'limit' => 3
       ]
     );
   }
