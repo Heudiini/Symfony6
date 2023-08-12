@@ -1,8 +1,14 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Comment;
+use App\Entity\MicroPost;
+use DateTime;
+use App\Controller\MicroPostController;
+use App\Repository\MicroPostRepository;
 
 use App\Entity\User;
+use App\Entity\Profile;
 use App\Entity\UserProfile;
 use App\Repository\UserProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,26 +24,52 @@ class HelloController extends AbstractController
     ['message' => 'Hi', 'created' => '2023/03/12'],
     ['message' => 'Bye!', 'created' => '2021/05/12']
   ];
- #[Route('/', name: 'app_index', requirements: ['limit' => '\d+'])]
+ #[Route('/', name: 'app_index')]
 
-   public function index(EntityManagerInterface $entityManager): Response
+   public function index(EntityManagerInterface $entityManager, MicroPostRepository $posts): Response
+    {
+        /* $post = new MicroPost();
+        $post->setTitle('Hello');
+        $post->setText('Text here');
+        $post->setCreated(new DateTime()) */ 
+        
+        /* 
+        
+        $post = $posts ->find(23);
+        $comment = $post->getComments()[1];
+        $comment->setPost(null);
 
-  {
+         */
+        // Associate the comment with the post
+       
+/* 
+        $entityManager->persist($post);
+        $entityManager->persist($comment); */
 
-    $user = new User();
-    $user -> setEmail('email3@email.com');
-    $user -> setPassword('4423456');
+        // Flush the changes to the database
+      
+
+   /*  $user = new User();
+    $user -> setEmail('email5@eail.com');
+    $user -> setPassword('13299456');
 
     $profile = new UserProfile();
     $profile-> setUser($user);
+   
+
+
+
+
      // Get the Doctrine entity manager and persist the User and UserProfile objects
-        $entityManager->persist($user);
-        $entityManager->persist($profile);
-
-        // Flush the changes to the database
-        $entityManager->flush();
+    $entityManager->persist($user);
+    $entityManager->persist($profile);
+  
 
 
+    // Flush the changes to the database
+     
+ */
+$entityManager->flush();
     return $this->render(
       'hello/index.html.twig',
       [
