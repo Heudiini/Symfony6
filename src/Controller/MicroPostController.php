@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+
 use App\Entity\MicroPost;
+use App\Form\CommentType;
 use App\Form\MicroPostType;
+use App\Repository\CommentRepository;
 use App\Repository\MicroPostRepository;
 use DateTime;
+
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -91,6 +96,48 @@ public function edit(MicroPost $post, Request $request, MicroPostRepository $pos
         [
             'form' => $form->createView(),
         ]
+    );
+}
+
+
+
+///comments 
+#[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
+public function addComment(MicroPost $post, Request $request,EntityManagerInterface $entityManager): Response
+{
+   
+    $form = $this->createForm(CommentType::class, new Comment());
+      
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $comment = $form->getData();
+        $comment->setPost($post);
+       // Persist the comment using EntityManager
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+
+        //add a flash
+        $this->addFlash('success','Your comment was updated');
+
+
+            // Redirect to the micro post index page
+        return $this->redirectToRoute('app_micro_post_show',
+    [  'post' => $post->getId(),
+
+    ]);
+
+        //redirect
+    }
+  // Render the add.html.twig template and pass the form and post as variables
+   
+    return $this->render(
+        'micro_post/comment.html.twig',
+        [
+           
+             'form' => $form,
+              'post' => $post        ]
     );
 }
 }
