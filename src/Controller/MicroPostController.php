@@ -81,7 +81,7 @@ public function edit(MicroPost $post, Request $request, MicroPostRepository $pos
         $posts->add($post, true);
 
         //add a flash
-        $this->addFlash('success','Your micro post was updated');
+        $this->addFlash('success','Your micro post was edited');
 
 
             // Redirect to the micro post index page
@@ -89,12 +89,13 @@ public function edit(MicroPost $post, Request $request, MicroPostRepository $pos
 
         //redirect
     }
-  // Render the add.html.twig template and pass the form and post as variables
+  // Render the .html.twig template and pass the form and post as variables
    
     return $this->render(
-        'micro_post/add.html.twig',
+        'micro_post/edit.html.twig',
         [
             'form' => $form->createView(),
+            'post' => $post
         ]
     );
 }
