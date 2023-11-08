@@ -40,105 +40,80 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-#[Route('/micro-post/add', name: 'app_micro_post_add', methods: ['GET', 'POST'], priority: 2)]
-public function add(Request $request, MicroPostRepository $posts): Response
-{
-  
-    $form = $this->createForm(MicroPostType::class,new MicroPost());
-       
+#[Route('/micro-post/add', name: 'app_micro_post_add', priority: 2)]
+public function add(Request $request, MicroPostRepository $posts): Response {
+    $microPost = new MicroPost();
+    $form = $this->createForm(MicroPostType::class, $microPost);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $post = $form->getData();
-        $post->setCreated(new DateTime());
-        $posts->add($post, true);
+        // Set the current logged-in user as the author of the microPost
+        $microPost->setAuthor($this->getUser());
+        $microPost->setCreated(new DateTime());
+        
+        $posts->add($microPost, true);
 
-        //add a flash
-        $this->addFlash('success','Your micro post was added');
+        $this->addFlash('success', 'Your micro post was added');
         return $this->redirectToRoute('app_micro_post');
-
-        //redirect
     }
 
-    return $this->render(
-        'micro_post/add.html.twig',
-        [
-            'form' => $form->createView(),
-        ]
-    );
+    return $this->render('micro_post/add.html.twig', [
+        'form' => $form->createView(),
+    ]);
 }
 #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
-public function edit(MicroPost $post, Request $request, MicroPostRepository $posts): Response
-{
-   
+public function edit(MicroPost $post, Request $request, MicroPostRepository $posts): Response {
     $form = $this->createForm(MicroPostType::class, $post);
-      
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $post = $form->getData();
-      
+        // Assuming the author should not change during edit, so not setting it again.
+        // If the author can change, you must handle it here appropriately.
+        
         $posts->add($post, true);
 
-        //add a flash
-        $this->addFlash('success','Your micro post was edited');
-
-
-            // Redirect to the micro post index page
+        $this->addFlash('success', 'Your micro post was edited');
         return $this->redirectToRoute('app_micro_post');
-
-        //redirect
     }
-  // Render the .html.twig template and pass the form and post as variables
-   
-    return $this->render(
-        'micro_post/edit.html.twig',
-        [
-            'form' => $form->createView(),
-            'post' => $post
-        ]
-    );
+
+    return $this->render('micro_post/edit.html.twig', [
+        'form' => $form->createView(),
+        'post' => $post
+    ]);
 }
 
 
 
 ///comments 
 #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
-public function addComment(MicroPost $post, Request $request,EntityManagerInterface $entityManager): Response
+public function addComment(MicroPost $post, Request $request, EntityManagerInterface $entityManager): Response
 {
-   
-    $form = $this->createForm(CommentType::class, new Comment());
-      
+    $comment = new Comment();
+    $form = $this->createForm(CommentType::class, $comment);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $comment = $form->getData();
         $comment->setPost($post);
-       // Persist the comment using EntityManager
-            $entityManager->persist($comment);
-            $entityManager->flush();
 
+        // Set the author of the comment to the current user
+        $comment->setAuthor($this->getUser());
 
-        //add a flash
-        $this->addFlash('success','Your comment was updated');
+        // Persist the comment using EntityManager
+        $entityManager->persist($comment);
+        $entityManager->flush();
 
+        // Add a flash message
+        $this->addFlash('success', 'Your comment was updated');
 
-            // Redirect to the micro post index page
-        return $this->redirectToRoute('app_micro_post_show',
-    [  'post' => $post->getId(),
-
-    ]);
-
-        //redirect
+        // Redirect to the micro post page
+        return $this->redirectToRoute('app_micro_post_show', ['post' => $post->getId()]);
     }
-  // Render the add.html.twig template and pass the form and post as variables
-   
-    return $this->render(
-        'micro_post/comment.html.twig',
-        [
-           
-             'form' => $form,
-              'post' => $post        ]
-    );
+
+    // Render the comment form
+    return $this->render('micro_post/comment.html.twig', [
+        'form' => $form->createView(),
+        'post' => $post
+    ]);
 }
+
 }
